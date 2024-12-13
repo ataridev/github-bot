@@ -1,0 +1,25 @@
+name: Hourly Activity Bot
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs every hour at the start of the hour
+
+jobs:
+  update-log:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Update activity log
+      run: |
+        echo "Last updated: $(date '+%Y-%m-%d %H:%M:%S')" > activity-log.md
+
+    - name: Commit changes
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "github-actions@github.com"
+        git add activity-log.md
+        git commit -m "Activity update: $(date '+%Y-%m-%d %H:%M:%S')"
+        git push
